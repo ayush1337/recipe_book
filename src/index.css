@@ -12,3 +12,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.box {
+  -webkit-backdrop-filter: blur(10px);
+
+  backdrop-filter: blur(10px);
+}

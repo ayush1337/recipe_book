@@ -1,6 +1,7 @@
 import React from 'react';
 import data from '../../data';
 import Card from './Card';
+import BlackCard from './BlackCard';
 const RecipesList = () => {
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4  gap-6 ">
