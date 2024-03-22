@@ -115,7 +115,7 @@ const Search = () => {
           }}
         />
       </div>
-      <div className="grid grid-flow-col gap-2">
+      <div className="grid md:grid-flow-col grid-flow-row gap-2">
         <Select
           options={cuisineOptions}
           isMulti
