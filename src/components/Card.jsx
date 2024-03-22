@@ -5,7 +5,7 @@ import VegCheck from './VegCheck';
 const Card = ({ id, title, summary, image, vegetarian, readyInMinutes }) => {
   return (
     <Link
-      to="#"
+      to={`/recipe/${id}`}
       className="flex flex-col gap-4 rounded-md bg-white p-4  shadow-sm"
     >
       <div className="rounded-md overflow-hidden">
