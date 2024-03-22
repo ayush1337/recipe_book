@@ -1,19 +1,20 @@
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
-
-import Hero from './components/Hero';
-import RecipesList from './components/RecipesList';
 import {
   cuisineOptions,
   dietOptions,
   mealOptions,
-} from './utils/filterOptions';
+} from '../utils/filterOptions';
 import { useState, useEffect } from 'react';
-import Skeleton from './components/Skeleton';
-
-function App() {
+import Skeleton from '../components/Skeleton';
+import { useDebounce } from '../hooks/useDebounceSearch';
+import SearchList from '../components/SearchList';
+const Search = () => {
   const [filter, setFilter] = useState({});
   const [mealFilter, setMealFilter] = useState({});
   const [dietFilter, setDietFilter] = useState({});
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
   const [status, setStatus] = useState({
     loading: false,
     success: false,
@@ -59,7 +60,9 @@ function App() {
   useEffect(() => {
     let fetchURL = `${
       import.meta.env.VITE_BASE_URL
-    }/recipes/random?number=12&apiKey=${import.meta.env.VITE_API_KEY}`;
+    }/recipes/complexSearch?query=${debouncedSearch}&apiKey=${
+      import.meta.env.VITE_API_KEY
+    }`;
     let params = '&inclue-tags=';
     let check = false;
     if (mealFilter?.value) {
@@ -78,12 +81,41 @@ function App() {
       fetchURL += params;
     }
     fetchRecipes(fetchURL);
-  }, [filter, mealFilter, dietFilter]);
-
+  }, [filter, mealFilter, dietFilter, debouncedSearch]);
+  console.log(recipes);
   return (
-    <div className="flex flex-col gap-10">
-      <Hero />
-      <div className="grid md:grid-flow-col grid-flow-row gap-2">
+    <div className="flex flex-col gap-8">
+      <Link
+        to="/"
+        className="flex items-center gap-1 text-orange-600 font-semibold pb-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+          />
+        </svg>
+        back
+      </Link>
+      <div>
+        <input
+          type="text"
+          className="w-full p-4 focus:outline-none bg-transparent border-b border-b-orange-600 placeholder:text-orange-600 placeholder:text-2xl"
+          placeholder="Search any recipe..."
+          onChange={(e) => {
+            setSearch(() => e.target.value);
+          }}
+        />
+      </div>
+      <div className="grid grid-flow-col gap-2">
         <Select
           options={cuisineOptions}
           isMulti
@@ -109,10 +141,10 @@ function App() {
         <Select
           options={dietOptions}
           isClearable
-          placeholder="Dietary Preferences"
           onChange={(diet) => {
             setDietFilter(() => diet);
           }}
+          placeholder="Dietary Preferences"
           theme={(theme) => ({
             ...theme,
             borderRadius: 0,
@@ -125,11 +157,11 @@ function App() {
         />
         <Select
           options={mealOptions}
-          placeholder="Meal Types"
           isClearable
           onChange={(meal) => {
             setMealFilter(() => meal);
           }}
+          placeholder="Meal Types"
           theme={(theme) => ({
             ...theme,
             borderRadius: 0,
@@ -146,10 +178,10 @@ function App() {
       )}
       {status.loading === true && <Skeleton />}
       {status.success === true && status.loading !== true && (
-        <RecipesList recipes={recipes} />
+        <SearchList recipes={recipes} />
       )}
     </div>
   );
-}
+};
 
-export default App;
+export default Search;

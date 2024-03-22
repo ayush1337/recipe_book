@@ -15,6 +15,10 @@
 
 .box {
   -webkit-backdrop-filter: blur(10px);
-
   backdrop-filter: blur(10px);
+}
+.instruction ol {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
